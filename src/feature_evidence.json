@@ -1,0 +1,72 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-display-the-phonepe-qr-code-image-from-the-uploaded-screenshot-on-the-subscription-payment-page-so-users-can-scan-it-to-pay-the-subscription-amount-directly-to-phone-number-9392412728",
+      "featureTitle": "Display the PhonePe QR code image (from the uploaded screenshot) on the subscription payment page so users can scan it to pay the subscription amount directly to phone number 9392412728",
+      "files": [
+        "frontend/src/pages/SubscriptionPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-27"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-payment-instructions-on-the-subscription-page-explaining-that-users-should-scan-the-qr-code-using-phonepe-google-pay-paytm-apps-to-complete-the-5-weekly-subscription-payment-to-phone-number-9392412728",
+      "featureTitle": "Add payment instructions on the subscription page explaining that users should scan the QR code using PhonePe/Google Pay/Paytm apps to complete the ₹5 weekly subscription payment to phone number 9392412728",
+      "files": [
+        "frontend/src/pages/SubscriptionPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-29"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-payment-confirmation-workflow-to-mention-that-payments-were-sent-to-phone-number-9392412728-after-users-complete-the-qr-code-scan-payment",
+      "featureTitle": "Update payment confirmation workflow to mention that payments were sent to phone number 9392412728 after users complete the QR code scan payment",
+      "files": [
+        "frontend/src/pages/PaymentFailurePage.tsx",
+        "frontend/src/pages/PaymentSuccessPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-30"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

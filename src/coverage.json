@@ -1,0 +1,77 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-22T03:35:27.740Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-27",
+        "summary": "Display the PhonePe QR code image (from the uploaded screenshot) on the subscription payment page so users can scan it to pay the subscription amount directly to phone number 9392412728",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/phonepe-qr-code.dim_400x400.png",
+          "frontend/src/pages/SubscriptionPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/SubscriptionPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-28",
+        "summary": "Store the phone number 9392412728 as the default payment recipient number in the backend for all subscription payments",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-29",
+        "summary": "Add payment instructions on the subscription page explaining that users should scan the QR code using PhonePe/Google Pay/Paytm apps to complete the ₹5 weekly subscription payment to phone number 9392412728",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/SubscriptionPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/SubscriptionPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-30",
+        "summary": "Update payment confirmation workflow to mention that payments were sent to phone number 9392412728 after users complete the QR code scan payment",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/PaymentSuccessPage.tsx",
+          "frontend/src/pages/PaymentFailurePage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/PaymentSuccessPage.tsx",
+          "frontend/src/pages/PaymentFailurePage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/public/assets/generated/phonepe-qr-code.dim_400x400.png",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/pages/PaymentFailurePage.tsx",
+    "frontend/src/pages/PaymentSuccessPage.tsx",
+    "frontend/src/pages/SubscriptionPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

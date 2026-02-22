@@ -1,0 +1,12 @@
+{
+  "frontend/src/pages/PaymentFailurePage.tsx": "Payment failure page displaying error message with recipient phone number 9392412728 reference and options to retry payment via QR code or contact support.",
+  "frontend/src/pages/BranchSelectionPage.tsx": "Branch selection page displaying all six diploma engineering branches with navigation to branch-specific content using proper TanStack Router params.",
+  "frontend/src/pages/QuizListPage.tsx": "Quiz listing page showing available daily quizzes with completion status and navigation using proper TanStack Router params.",
+  "frontend/src/index.css": "Global CSS file with Tailwind directives and custom design system using warm educational color palette (sage green, terracotta orange, warm amber) in OKLCH color space for both light and dark modes.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom warm color palette, typography settings, and design tokens matching the educational theme with proper OKLCH color definitions.",
+  "frontend/src/hooks/useWithdrawal.ts": "Custom React Query hooks for withdrawal operations including submission with phone number validation (10 digits), fetching all withdrawal requests, and fetching individual withdrawal requests.",
+  "frontend/src/pages/admin/AdminDashboardPage.tsx": "Admin dashboard page with wallet summary, withdrawal functionality including phone number input field with validation, withdrawal confirmation dialog, and quick action cards for content and user management.",
+  "frontend/src/pages/LoginPage.tsx": "Login page with password authentication form (email and password fields with validation) and Internet Identity login button, displaying appropriate error messages when password auth is attempted (currently disabled in backend).",
+  "frontend/src/pages/SubscriptionPage.tsx": "Subscription page displaying weekly plan (₹5/week) with PhonePe QR code payment integration, step-by-step payment instructions, and recipient phone number 9392412728 prominently displayed for UPI payments.",
+  "frontend/src/pages/PaymentSuccessPage.tsx": "Payment success page confirming subscription payment initiation with recipient phone number 9392412728 displayed, informing users that admin verification is pending before subscription activation."
+}

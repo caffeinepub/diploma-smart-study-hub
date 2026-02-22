@@ -1,0 +1,101 @@
+{
+  "kind": "build_request",
+  "title": "Integrate PhonePe QR code payment for phone number 9392412728",
+  "projectName": "Diploma Smart Study Hub",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-27",
+      "text": "Display the PhonePe QR code image (from the uploaded screenshot) on the subscription payment page so users can scan it to pay the subscription amount directly to phone number 9392412728",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Ok to the subscription payment are created for the this number \"9392412728\" or this scanner to work on frontend and backend"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The PhonePe QR code image is displayed prominently on the subscription payment page",
+        "The QR code is large enough to be easily scanned by mobile payment apps",
+        "Users can see that scanning this code will send payment to the phone number 9392412728",
+        "The QR code image is rendered from the uploaded screenshot as a static asset"
+      ]
+    },
+    {
+      "id": "REQ-28",
+      "text": "Store the phone number 9392412728 as the default payment recipient number in the backend for all subscription payments",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "this number \"9392412728\"",
+          "to work on frontend and backend"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The phone number 9392412728 is stored as a constant or configuration value in the backend",
+        "All payment records reference this phone number as the recipient",
+        "The phone number is used when generating payment confirmation messages"
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "text": "Add payment instructions on the subscription page explaining that users should scan the QR code using PhonePe/Google Pay/Paytm apps to complete the ₹5 weekly subscription payment to phone number 9392412728",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "this scanner to work on frontend"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clear step-by-step instructions are displayed near the QR code",
+        "Instructions mention PhonePe, Google Pay, and Paytm as compatible payment apps",
+        "The subscription amount (₹5/week) is clearly stated",
+        "The recipient phone number 9392412728 is visible to users"
+      ]
+    },
+    {
+      "id": "REQ-30",
+      "text": "Update payment confirmation workflow to mention that payments were sent to phone number 9392412728 after users complete the QR code scan payment",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "to message a this number"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Payment success messages display the recipient phone number 9392412728",
+        "Backend payment records include the recipient phone number",
+        "Users receive confirmation that their payment was directed to the correct number"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify existing Internet Identity authentication system",
+    "Do not change the backend schema for existing user and subscription tables",
+    "Preserve existing withdrawal system with phone number field for admin withdrawals",
+    "Keep the ₹5 weekly subscription price unchanged"
+  ],
+  "nonGoals": [
+    "Automated payment verification via UPI API",
+    "Real-time SMS notifications to phone number 9392412728",
+    "Integration with PhonePe merchant APIs",
+    "Automatic subscription activation upon QR scan"
+  ],
+  "imageRequirements": {
+    "required": [
+      "PhonePe QR code image extracted from uploaded screenshot showing payment code for phone number 9392412728 (phonepe-qr-code.dim_400x400.png)"
+    ],
+    "edits": []
+  }
+}

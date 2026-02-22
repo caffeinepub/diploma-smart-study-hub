@@ -1,0 +1,66 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Integrate PhonePe QR Code Payment for Subscription",
+  "requirements": [
+    {
+      "id": "REQ-27",
+      "summary": "Display PhonePe QR code on subscription payment page for phone number 9392412728",
+      "acceptanceCriteria": [
+        "The PhonePe QR code image is displayed prominently on the subscription payment page",
+        "The QR code is large enough to be easily scanned by mobile payment apps",
+        "Users can see that scanning this code will send payment to the phone number 9392412728",
+        "The QR code image is rendered from the uploaded screenshot as a static asset"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/phonepe-qr-code.dim_400x400.png",
+          "operation": "create",
+          "description": "Add the PhonePe QR code image extracted from the uploaded screenshot. This image shows the payment QR code for phone number 9392412728. The image will be referenced as a static asset in the subscription payment page."
+        },
+        {
+          "path": "frontend/src/pages/SubscriptionPage.tsx",
+          "operation": "modify",
+          "description": "Add a dedicated payment section displaying the PhonePe QR code image at frontend/public/assets/phonepe-qr-code.dim_400x400.png. Position the QR code prominently after the subscription plan details, with adequate sizing (400x400px or larger) to ensure easy scanning. Include a heading 'Scan to Pay' and display the recipient phone number 9392412728 below the QR code. Wrap the QR code in a Card component for visual emphasis."
+        }
+      ]
+    },
+    {
+      "id": "REQ-29",
+      "summary": "Add payment instructions for QR code scanning on subscription page",
+      "acceptanceCriteria": [
+        "Clear step-by-step instructions are displayed near the QR code",
+        "Instructions mention PhonePe, Google Pay, and Paytm as compatible payment apps",
+        "The subscription amount (₹5/week) is clearly stated",
+        "The recipient phone number 9392412728 is visible to users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/SubscriptionPage.tsx",
+          "operation": "modify",
+          "description": "Add a payment instructions section immediately above or beside the QR code. Include: (1) Step-by-step instructions: 'Open PhonePe, Google Pay, or Paytm app', 'Tap on Scan QR Code', 'Scan the QR code shown below', 'Enter amount: ₹5', 'Complete the payment'. (2) Clearly state the subscription amount as '₹5 per week'. (3) Display the recipient phone number: 'Payment will be sent to: 9392412728'. Use an ordered list or numbered steps for clarity. Style the instructions with appropriate spacing and typography to ensure readability."
+        }
+      ]
+    },
+    {
+      "id": "REQ-30",
+      "summary": "Update payment confirmation workflow to reference phone number 9392412728",
+      "acceptanceCriteria": [
+        "Payment success messages display the recipient phone number 9392412728",
+        "Users receive confirmation that their payment was directed to the correct number"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/PaymentSuccessPage.tsx",
+          "operation": "modify",
+          "description": "Update the success message to include the recipient phone number. Change the confirmation text to: 'Your subscription payment has been initiated. Please ensure you have completed the payment of ₹5 to phone number 9392412728 via the QR code scan.' Add an informational note: 'Your subscription will be activated once the payment is verified by our admin team.' Keep existing links to dashboard and browse materials."
+        },
+        {
+          "path": "frontend/src/pages/PaymentFailurePage.tsx",
+          "operation": "modify",
+          "description": "Update the failure message to reference the payment method. Change the message to: 'Payment to phone number 9392412728 could not be completed. Please try scanning the QR code again or contact support if the issue persists.' Ensure the retry payment link redirects back to the subscription page where the QR code is displayed."
+        }
+      ]
+    }
+  ]
+}
