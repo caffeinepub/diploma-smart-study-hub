@@ -1,18 +1,44 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../../hooks/useInternetIdentity';
+import { useIsAdmin } from '../../hooks/useAdminCheck';
+import { useGetGalleriesByCategory } from '../../hooks/useGalleryContent';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
-import { Textarea } from '../../components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { Upload, FileText, Video, Link as LinkIcon } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Label } from '../../components/ui/label';
+import { Alert, AlertDescription } from '../../components/ui/alert';
+import { Shield, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import GalleryUploadSection from '../../components/admin/GalleryUploadSection';
+import GalleryPreviewGrid from '../../components/admin/GalleryPreviewGrid';
+
+const BRANCHES = ['CSE', 'ECE', 'MECH', 'CIVIL', 'EEE'];
+const SEMESTERS = ['1', '2', '3', '4', '5', '6'];
+const SUBJECTS: Record<string, string[]> = {
+  CSE: ['Data Structures', 'Algorithms', 'Database Systems', 'Operating Systems', 'Computer Networks'],
+  ECE: ['Digital Electronics', 'Signals and Systems', 'Communication Systems', 'Microprocessors'],
+  MECH: ['Thermodynamics', 'Fluid Mechanics', 'Machine Design', 'Manufacturing Processes'],
+  CIVIL: ['Structural Analysis', 'Concrete Technology', 'Surveying', 'Geotechnical Engineering'],
+  EEE: ['Electrical Machines', 'Power Systems', 'Control Systems', 'Electrical Circuits'],
+};
 
 export default function ContentManagementPage() {
   const { identity } = useInternetIdentity();
+  const { isAdmin, isLoading: adminLoading } = useIsAdmin();
   const navigate = useNavigate();
+
+  const [selectedBranch, setSelectedBranch] = useState<string>('CSE');
+  const [selectedSemester, setSelectedSemester] = useState<string>('1');
+  const [selectedSubject, setSelectedSubject] = useState<string>('Data Structures');
+  const [selectedChapter, setSelectedChapter] = useState<string>('Chapter 1');
+
+  const { data: galleries = [], isLoading: galleriesLoading } = useGetGalleriesByCategory(
+    selectedBranch,
+    selectedSemester,
+    selectedSubject,
+    selectedChapter
+  );
 
   useEffect(() => {
     if (!identity) {
@@ -20,146 +46,201 @@ export default function ContentManagementPage() {
     }
   }, [identity, navigate]);
 
-  if (!identity) return null;
+  useEffect(() => {
+    if (!adminLoading && identity && !isAdmin) {
+      toast.error('Access Denied', {
+        description: 'You do not have admin permissions to access this page.',
+      });
+      navigate({ to: '/dashboard' });
+    }
+  }, [isAdmin, adminLoading, identity, navigate]);
+
+  useEffect(() => {
+    // Update subject when branch changes
+    const subjects = SUBJECTS[selectedBranch] || [];
+    if (subjects.length > 0 && !subjects.includes(selectedSubject)) {
+      setSelectedSubject(subjects[0]);
+    }
+  }, [selectedBranch, selectedSubject]);
+
+  if (!identity || adminLoading) return null;
+
+  if (!isAdmin) {
+    return (
+      <div className="container py-12">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Access Denied: You do not have admin permissions to view this page.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  const availableSubjects = SUBJECTS[selectedBranch] || [];
 
   return (
     <div className="container py-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Content Management</h1>
-          <p className="text-muted-foreground">Upload and organize study materials</p>
+      <div className="space-y-8">
+        {/* Admin Mode Banner */}
+        <div className="rounded-lg bg-accent/10 border-2 border-accent p-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+              <Shield className="h-5 w-5 text-accent-foreground" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-accent-foreground">Admin Mode Active</h2>
+              <p className="text-sm text-muted-foreground">You have full administrative access to manage content</p>
+            </div>
+          </div>
         </div>
 
-        <Tabs defaultValue="upload" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="upload">Upload Content</TabsTrigger>
-            <TabsTrigger value="manage">Manage Content</TabsTrigger>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Content Management</h1>
+          <p className="text-muted-foreground">Upload and manage study materials</p>
+        </div>
+
+        {/* Category Filters */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Select Category</CardTitle>
+            <CardDescription>Choose the branch, semester, subject, and chapter for content management</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="branch">Branch</Label>
+                <Select value={selectedBranch} onValueChange={setSelectedBranch}>
+                  <SelectTrigger id="branch">
+                    <SelectValue placeholder="Select branch" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BRANCHES.map((branch) => (
+                      <SelectItem key={branch} value={branch}>
+                        {branch}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="semester">Semester</Label>
+                <Select value={selectedSemester} onValueChange={setSelectedSemester}>
+                  <SelectTrigger id="semester">
+                    <SelectValue placeholder="Select semester" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SEMESTERS.map((semester) => (
+                      <SelectItem key={semester} value={semester}>
+                        Semester {semester}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject</Label>
+                <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+                  <SelectTrigger id="subject">
+                    <SelectValue placeholder="Select subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableSubjects.map((subject) => (
+                      <SelectItem key={subject} value={subject}>
+                        {subject}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="chapter">Chapter</Label>
+                <Select value={selectedChapter} onValueChange={setSelectedChapter}>
+                  <SelectTrigger id="chapter">
+                    <SelectValue placeholder="Select chapter" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                      <SelectItem key={num} value={`Chapter ${num}`}>
+                        Chapter {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Tabs defaultValue="gallery" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="gallery">Gallery</TabsTrigger>
+            <TabsTrigger value="pdfs">PDFs</TabsTrigger>
+            <TabsTrigger value="videos">Videos</TabsTrigger>
+            <TabsTrigger value="links">Links</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="upload" className="space-y-6">
+          <TabsContent value="gallery" className="space-y-6">
+            <GalleryUploadSection
+              branch={selectedBranch}
+              semester={selectedSemester}
+              subject={selectedSubject}
+              chapter={selectedChapter}
+            />
+
             <Card>
               <CardHeader>
-                <CardTitle>Upload New Content</CardTitle>
-                <CardDescription>Add PDFs, notes, videos, or links to the platform</CardDescription>
+                <CardTitle>Existing Galleries</CardTitle>
+                <CardDescription>
+                  View and manage galleries for {selectedBranch} - Semester {selectedSemester} - {selectedSubject} - {selectedChapter}
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="branch">Branch</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select branch" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cse">Computer Science</SelectItem>
-                        <SelectItem value="ece">Electronics & Communication</SelectItem>
-                        <SelectItem value="eee">Electrical & Electronics</SelectItem>
-                        <SelectItem value="mech">Mechanical</SelectItem>
-                        <SelectItem value="civil">Civil</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="semester">Semester</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select semester" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5, 6].map((sem) => (
-                          <SelectItem key={sem} value={sem.toString()}>
-                            Semester {sem}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="subject">Subject</Label>
-                    <Input id="subject" placeholder="e.g., Data Structures" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="chapter">Chapter</Label>
-                    <Input id="chapter" placeholder="e.g., Chapter 3" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="title">Content Title</Label>
-                  <Input id="title" placeholder="e.g., Arrays and Linked Lists" />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea id="description" placeholder="Brief description of the content..." rows={3} />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="type">Content Type</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pdf">PDF Document</SelectItem>
-                      <SelectItem value="notes">Notes</SelectItem>
-                      <SelectItem value="video">Video Link</SelectItem>
-                      <SelectItem value="link">Important Link</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="file">Upload File / Enter URL</Label>
-                  <Input id="file" type="file" />
-                  <Input id="url" placeholder="Or paste URL here..." className="mt-2" />
-                </div>
-
-                <Button className="w-full" size="lg">
-                  <Upload className="mr-2 h-5 w-5" />
-                  Upload Content
-                </Button>
+              <CardContent>
+                {galleriesLoading ? (
+                  <div className="text-center py-8 text-muted-foreground">Loading galleries...</div>
+                ) : (
+                  <GalleryPreviewGrid galleries={galleries} />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="manage" className="space-y-4">
+          <TabsContent value="pdfs">
             <Card>
               <CardHeader>
-                <CardTitle>Recent Uploads</CardTitle>
-                <CardDescription>Manage your uploaded content</CardDescription>
+                <CardTitle>PDF Management</CardTitle>
+                <CardDescription>Upload and manage PDF study materials</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {[
-                    { title: 'Data Structures - Arrays', type: 'PDF', branch: 'CSE', date: 'Today' },
-                    { title: 'Digital Logic Video', type: 'Video', branch: 'ECE', date: 'Yesterday' },
-                    { title: 'Thermodynamics Notes', type: 'Notes', branch: 'MECH', date: '2 days ago' },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          {item.type === 'PDF' && <FileText className="h-5 w-5 text-primary" />}
-                          {item.type === 'Video' && <Video className="h-5 w-5 text-primary" />}
-                          {item.type === 'Notes' && <FileText className="h-5 w-5 text-primary" />}
-                        </div>
-                        <div>
-                          <p className="font-medium">{item.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {item.branch} • {item.date}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Edit</Button>
-                        <Button variant="outline" size="sm" className="text-destructive">Delete</Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-muted-foreground">PDF upload functionality coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="videos">
+            <Card>
+              <CardHeader>
+                <CardTitle>Video Management</CardTitle>
+                <CardDescription>Upload and manage video lectures</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Video upload functionality coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="links">
+            <Card>
+              <CardHeader>
+                <CardTitle>Link Management</CardTitle>
+                <CardDescription>Add and manage important links</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Link management functionality coming soon...</p>
               </CardContent>
             </Card>
           </TabsContent>

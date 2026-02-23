@@ -10,6 +10,7 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export type ExternalBlob = Uint8Array;
 export interface File {
   'id' : string,
   'isEncrypted' : boolean,
@@ -29,6 +30,27 @@ export type FileType = { 'mp4' : null } |
   { 'zoomChart' : null } |
   { 'screenshot' : null } |
   { 'pdfWithQRCode' : null };
+export interface Gallery {
+  'id' : string,
+  'title' : string,
+  'branch' : [] | [string],
+  'semester' : [] | [string],
+  'subject' : [] | [string],
+  'description' : string,
+  'chapter' : [] | [string],
+  'videos' : Array<GalleryVideo>,
+  'images' : Array<GalleryImage>,
+}
+export interface GalleryImage {
+  'id' : string,
+  'blob' : Uint8Array,
+  'fileName' : string,
+}
+export interface GalleryVideo {
+  'id' : string,
+  'blob' : ExternalBlob,
+  'fileName' : string,
+}
 export interface Lesson {
   'id' : string,
   'files' : Array<File>,
@@ -56,6 +78,18 @@ export interface LessonStatusUpdate {
   'lessonId' : string,
   'newStatus' : LessonStatus,
 }
+export interface PaymentRecord {
+  'id' : string,
+  'status' : PaymentStatus,
+  'userId' : Principal,
+  'timestamp' : bigint,
+  'stripeSessionId' : [] | [string],
+  'amount' : bigint,
+}
+export type PaymentStatus = { 'pending' : null } |
+  { 'completed' : null } |
+  { 'refunded' : null } |
+  { 'failed' : null };
 export interface Reminders { 'lessonReminders' : Array<LessonReminder> }
 export interface ShoppingItem {
   'productName' : string,
@@ -82,6 +116,7 @@ export interface TransformationOutput {
   'body' : Uint8Array,
   'headers' : Array<http_header>,
 }
+export interface UploadedFiles { 'files' : Array<File> }
 export interface UserProfile {
   'branch' : string,
   'name' : string,
@@ -138,28 +173,69 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'activateUserAccount' : ActorMethod<[Principal], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'authenticateAdmin' : ActorMethod<[string], boolean>,
+  'bulkDeleteCategories' : ActorMethod<[Array<string>], undefined>,
+  'bulkUpload' : ActorMethod<[UploadedFiles], undefined>,
+  'checkForDuplicates' : ActorMethod<[string, string], boolean>,
+  'checkSubscriptionStatus' : ActorMethod<[], boolean>,
   'createCheckoutSession' : ActorMethod<
     [Array<ShoppingItem>, string, string],
     string
   >,
+  'createGallery' : ActorMethod<
+    [
+      string,
+      string,
+      [] | [string],
+      [] | [string],
+      [] | [string],
+      [] | [string],
+    ],
+    string
+  >,
   'createLesson' : ActorMethod<[Lesson], string>,
+  'deactivateUserAccount' : ActorMethod<[Principal], undefined>,
+  'deleteCategory' : ActorMethod<[string], undefined>,
+  'deleteFile' : ActorMethod<[string], undefined>,
+  'deleteGallery' : ActorMethod<[string], undefined>,
+  'deleteGalleryImage' : ActorMethod<[string, string], undefined>,
+  'deleteGalleryVideo' : ActorMethod<[string, string], undefined>,
+  'deleteImportantLink' : ActorMethod<[string], undefined>,
   'deleteLesson' : ActorMethod<[string], undefined>,
+  'deleteVideoLink' : ActorMethod<[string], undefined>,
+  'finalizeStripeCheckout' : ActorMethod<[string], boolean>,
+  'getActiveSubscriptions' : ActorMethod<[], Array<Principal>>,
+  'getAllActiveSubscriptions' : ActorMethod<[], Array<Principal>>,
   'getAllLessons' : ActorMethod<[], Array<Lesson>>,
+  'getAllPayments' : ActorMethod<[], Array<PaymentRecord>>,
   'getAllWithdrawalRequests' : ActorMethod<[], Array<WithdrawalRequest>>,
+  'getBankAccountDetails' : ActorMethod<[], [string, string]>,
+  'getCallerPayments' : ActorMethod<[], Array<PaymentRecord>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getFinalizedPurchases' : ActorMethod<[], Array<string>>,
+  'getGalleriesByCategory' : ActorMethod<
+    [[] | [string], [] | [string], [] | [string], [] | [string]],
+    Array<Gallery>
+  >,
+  'getGalleryById' : ActorMethod<[string], [] | [Gallery]>,
+  'getGalleryVideos' : ActorMethod<[string], Array<GalleryVideo>>,
   'getLesson' : ActorMethod<[string], Lesson>,
   'getLessonStatus' : ActorMethod<[string], LessonStatus>,
   'getLessonTimeSpent' : ActorMethod<[string], bigint>,
-  'getPhoneNumber' : ActorMethod<[], string>,
+  'getPaymentById' : ActorMethod<[string], [] | [PaymentRecord]>,
+  'getPendingPurchases' : ActorMethod<[], Array<string>>,
+  'getPhonePePaymentsUPI' : ActorMethod<[], string>,
   'getStripeSessionStatus' : ActorMethod<[string], StripeSessionStatus>,
+  'getUserPayments' : ActorMethod<[Principal], Array<PaymentRecord>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'getWithdrawalRequest' : ActorMethod<[string], [] | [WithdrawalRequest]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isPasswordSet' : ActorMethod<[], boolean>,
   'isStripeConfigured' : ActorMethod<[], boolean>,
+  'isSubscriptionActive' : ActorMethod<[], boolean>,
   'saveAdminPassword' : ActorMethod<[string], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
@@ -167,7 +243,11 @@ export interface _SERVICE {
   'transform' : ActorMethod<[TransformationInput], TransformationOutput>,
   'updateLesson' : ActorMethod<[string, Lesson], undefined>,
   'updateLessonStatus' : ActorMethod<[LessonStatusUpdate], undefined>,
+  'updatePaymentStatus' : ActorMethod<[string, PaymentStatus], undefined>,
   'updateWithdrawalStatus' : ActorMethod<[string, WithdrawalStatus], undefined>,
+  'uploadGalleryImages' : ActorMethod<[string, Array<GalleryImage>], undefined>,
+  'uploadGalleryVideos' : ActorMethod<[string, Array<GalleryVideo>], undefined>,
+  'validateFileSize' : ActorMethod<[bigint], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

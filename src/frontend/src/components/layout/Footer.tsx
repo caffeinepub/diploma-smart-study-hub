@@ -9,127 +9,103 @@ export default function Footer() {
   );
 
   return (
-    <footer className="border-t border-border/40 bg-muted/30">
-      <div className="container py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <img src="/assets/generated/logo.dim_200x200.png" alt="Logo" className="h-10 w-10" />
-              <span className="font-bold text-lg text-primary">Diploma Study Hub</span>
+    <footer className="border-t-2 border-border/60 bg-gradient-to-br from-muted/30 via-background to-muted/30">
+      <div className="container py-16">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <img src="/assets/generated/logo.dim_200x200.png" alt="Logo" className="h-8 w-8" />
+              </div>
+              <span className="font-display font-bold text-xl text-primary">Diploma Study Hub</span>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Empowering diploma students with quality study materials and resources across all engineering branches.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/branches" className="text-muted-foreground hover:text-primary transition-colors">
-                  Branches
-                </Link>
-              </li>
-              <li>
-                <Link to="/subscription" className="text-muted-foreground hover:text-primary transition-colors">
-                  Subscription
-                </Link>
-              </li>
+            <h3 className="font-semibold text-lg mb-6">Quick Links</h3>
+            <ul className="space-y-3 text-sm">
+              {[
+                { to: '/', label: 'Home' },
+                { to: '/about', label: 'About Us' },
+                { to: '/branches', label: 'Branches' },
+                { to: '/subscription', label: 'Subscription' },
+                { to: '/contact', label: 'Contact' },
+              ].map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Resources</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/leaderboard" className="text-muted-foreground hover:text-primary transition-colors">
-                  Leaderboard
-                </Link>
-              </li>
-              <li>
-                <Link to="/quizzes" className="text-muted-foreground hover:text-primary transition-colors">
-                  Daily Quizzes
-                </Link>
-              </li>
-              <li>
-                <Link to="/certificates" className="text-muted-foreground hover:text-primary transition-colors">
-                  Certificates
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact
-                </Link>
-              </li>
+            <h3 className="font-semibold text-lg mb-6">Resources</h3>
+            <ul className="space-y-3 text-sm">
+              {[
+                { to: '/dashboard', label: 'Dashboard' },
+                { to: '/quizzes', label: 'Daily Quizzes' },
+                { to: '/leaderboard', label: 'Leaderboard' },
+                { to: '/certificates', label: 'Certificates' },
+                { to: '/reminders', label: 'Study Reminders' },
+              ].map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Connect With Us</h3>
-            <div className="flex gap-3">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <SiFacebook className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <SiX className="h-5 w-5" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <SiInstagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <SiLinkedin className="h-5 w-5" />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <SiYoutube className="h-5 w-5" />
-              </a>
+            <h3 className="font-semibold text-lg mb-6">Connect With Us</h3>
+            <div className="flex gap-3 mb-6">
+              {[
+                { Icon: SiFacebook, href: '#' },
+                { Icon: SiX, href: '#' },
+                { Icon: SiInstagram, href: '#' },
+                { Icon: SiLinkedin, href: '#' },
+                { Icon: SiYoutube, href: '#' },
+              ].map(({ Icon, href }, i) => (
+                <a
+                  key={i}
+                  href={href}
+                  className="h-10 w-10 rounded-full bg-muted hover:bg-primary hover:text-primary-foreground transition-colors flex items-center justify-center"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
             </div>
+            <p className="text-sm text-muted-foreground">
+              Stay updated with the latest study materials and announcements
+            </p>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-border/40 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {currentYear} Diploma Smart Study Hub. All rights reserved.</p>
-          <p className="flex items-center gap-1">
-            Built with <Heart className="h-4 w-4 text-red-500 fill-red-500" /> using{' '}
+        <div className="mt-12 pt-8 border-t-2 border-border/60 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
+            © {currentYear} Diploma Study Hub. All rights reserved.
+          </p>
+          <p className="text-sm text-muted-foreground flex items-center gap-2">
+            Built with <Heart className="h-4 w-4 text-primary fill-primary" /> using{' '}
             <a
               href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${appIdentifier}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline"
+              className="text-primary hover:underline font-medium"
             >
               caffeine.ai
             </a>

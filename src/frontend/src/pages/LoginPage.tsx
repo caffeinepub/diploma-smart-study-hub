@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useIsAdmin } from '../hooks/useAdminCheck';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -8,9 +9,11 @@ import { Label } from '../components/ui/label';
 import { LogIn, Shield, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Separator } from '../components/ui/separator';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const { identity, login, isLoggingIn } = useInternetIdentity();
+  const { isAdmin, isFetched } = useIsAdmin();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('mouli10298@gmail.com');
@@ -18,10 +21,17 @@ export default function LoginPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (identity) {
-      navigate({ to: '/dashboard' });
+    if (identity && isFetched) {
+      if (isAdmin) {
+        toast.success('Admin access granted', {
+          description: 'Welcome back, Administrator!',
+        });
+        navigate({ to: '/admin/dashboard' });
+      } else {
+        navigate({ to: '/dashboard' });
+      }
     }
-  }, [identity, navigate]);
+  }, [identity, isAdmin, isFetched, navigate]);
 
   const handleInternetIdentityLogin = async () => {
     try {

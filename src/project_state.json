@@ -1,180 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
-  "summary": "Full-stack educational website for Diploma students across all branches (CSE, ECE, EEE, MECH, Civil, etc.) with PDF materials, chapter-wise lessons, notes, educational videos, and important links. Includes secure login (Gmail + Roll Number), ₹5/week subscription system with auto-expiry, UPI payment integration (Razorpay/PhonePe/Google Pay), admin wallet with ₹50 minimum withdrawal, and comprehensive admin panel for content management, user management, and payment approval.",
+  "projectStateVersion": 3,
+  "summary": "Project with PhonePe payment integration for subscription",
   "architectural_notes": [
-    "Full-stack architecture: Frontend (HTML5, CSS3, Bootstrap/Tailwind, JavaScript) + Backend (Node.js/Express or PHP/MySQL or Python Django)",
-    "Database: MySQL or MongoDB with tables for Users, Branches, Subjects, Payments, Subscriptions, Admin Wallet, Withdrawals, Uploads",
-    "Responsive mobile-first design with PWA support optional",
-    "Deployment: Frontend on Vercel/Netlify, Backend on Railway/Render/Hostinger with SSL certificate",
-    "Payment flow: UPI integration → Payment confirmation → Database storage → Subscription activation",
-    "Admin wallet: Track total earnings, available balance, withdrawal requests with ₹50 minimum threshold",
-    "Content access control: Subscription-gated materials with semester/chapter-wise organization per branch",
-    "Security layers: JWT tokens, bcrypt hashing, secure admin routes, HTTPS ready, SQL injection prevention",
-    "UPI payment integration: Generate dynamic QR codes with UPI deep links (upi://pay) targeting phone number 9392412728",
-    "SMS notification system: Send payment confirmations and transaction details to admin phone 9392412728"
+    "PhonePe payment integration using UPI ID for subscriptions"
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- PhonePe QR code image extracted from uploaded screenshot showing payment code for phone number 9392412728 (phonepe-qr-code.dim_400x400.png)",
   "existing_features": [
     {
-      "id": "feature-implement-user-authentication-system-supporting-registration-and-login-with-gmail-email-and-roll-number-store-user-credentials-branch-selection-and-authentication-tokens-securely-in-the-backend",
-      "title": "Implement user authentication system supporting registration and login with Gmail (email) and Roll Number. Store user credentials, branch selection, and authentication tokens securely in the backend.",
+      "id": "feature-hide-or-obscure-the-upi-id-in-the-frontend-payment-ui-displaying-only-partial-digits-or-a-masked-version-instead-of-showing-the-full-upi-id-9392412728-2-axl",
+      "title": "Hide or obscure the UPI ID in the frontend payment UI, displaying only partial digits or a masked version instead of showing the full UPI ID '9392412728-2@axl'",
       "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-build-an-admin-only-content-management-system-for-uploading-pdfs-notes-video-links-and-important-links-associate-uploaded-content-with-specific-branches-semesters-subjects-and-chapters-implement-secure-file-storage-for-pdfs-and-notes-with-access-control",
-      "title": "Build an admin-only content management system for uploading PDFs, notes, video links, and important links. Associate uploaded content with specific branches, semesters, subjects, and chapters. Implement secure file storage for PDFs and notes with access control.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-admin-user-management-panel-with-ability-to-view-all-registered-users-approve-reject-payments-block-unblock-users-and-view-payment-records-include-user-filtering-by-branch-and-subscription-status",
-      "title": "Implement admin user management panel with ability to view all registered users, approve/reject payments, block/unblock users, and view payment records. Include user filtering by branch and subscription status.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-responsive-home-page-with-platform-overview-feature-highlights-and-branch-selection-include-about-page-with-platform-description-subscription-page-explaining-the-5-weekly-plan-with-payment-integration-and-contact-page",
-      "title": "Create a responsive home page with platform overview, feature highlights, and branch selection. Include About page with platform description, Subscription page explaining the ₹5 weekly plan with payment integration, and Contact page.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-build-user-dashboard-displaying-subscription-status-with-remaining-days-payment-history-download-history-and-user-profile-information-show-clear-indicators-for-active-expired-subscriptions-and-provide-quick-access-to-content-by-branch-and-semester",
-      "title": "Build user dashboard displaying subscription status with remaining days, payment history, download history, and user profile information. Show clear indicators for active/expired subscriptions and provide quick access to content by branch and semester.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-admin-dashboard-with-wallet-summary-total-earnings-available-balance-withdrawal-button-content-management-interface-for-uploading-materials-user-management-panel-payment-approval-queue-and-banner-management-for-promotional-content",
-      "title": "Create admin dashboard with wallet summary (total earnings, available balance, withdrawal button), content management interface for uploading materials, user management panel, payment approval queue, and banner management for promotional content.",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-content-browsing-interface-organized-by-branch-semester-subject-and-chapter-display-pdfs-notes-video-links-and-important-links-for-each-chapter-restrict-access-to-content-based-on-active-subscription-status",
-      "title": "Implement content browsing interface organized by branch, semester, subject, and chapter. Display PDFs, notes, video links, and important links for each chapter. Restrict access to content based on active subscription status.",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-search-functionality-across-all-content-branches-subjects-chapters-materials-with-filtering-by-branch-and-content-type-implement-dark-mode-toggle-with-persistent-user-preference-storage",
-      "title": "Add search functionality across all content (branches, subjects, chapters, materials) with filtering by branch and content type. Implement dark mode toggle with persistent user preference storage.",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-user-profile-page-where-users-can-view-and-edit-their-personal-information-including-gmail-roll-number-branch-selection-and-profile-picture-display-subscription-history-and-account-statistics",
-      "title": "Create user profile page where users can view and edit their personal information including Gmail, Roll Number, branch selection, and profile picture. Display subscription history and account statistics.",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-notification-system-for-subscription-expiry-reminders-3-days-1-day-expired-new-content-uploads-in-user-s-branch-and-admin-announcements-display-notifications-in-app-with-badge-counter",
-      "title": "Implement notification system for subscription expiry reminders (3 days, 1 day, expired), new content uploads in user's branch, and admin announcements. Display notifications in-app with badge counter.",
-      "reqIds": [
-        "REQ-15"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-build-leaderboard-feature-ranking-students-by-download-activity-quiz-scores-and-engagement-metrics-display-top-performers-with-anonymized-names-or-user-chosen-display-names",
-      "title": "Build leaderboard feature ranking students by download activity, quiz scores, and engagement metrics. Display top performers with anonymized names or user-chosen display names.",
-      "reqIds": [
-        "REQ-16"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-study-reminder-system-where-users-can-set-custom-reminders-for-study-sessions-exam-dates-and-assignment-deadlines-display-upcoming-reminders-in-dashboard-and-send-in-app-notifications",
-      "title": "Create study reminder system where users can set custom reminders for study sessions, exam dates, and assignment deadlines. Display upcoming reminders in dashboard and send in-app notifications.",
-      "reqIds": [
-        "REQ-18"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-build-daily-quiz-section-with-subject-specific-multiple-choice-questions-track-quiz-scores-display-results-with-correct-answers-and-contribute-quiz-performance-to-leaderboard-rankings",
-      "title": "Build daily quiz section with subject-specific multiple-choice questions. Track quiz scores, display results with correct answers, and contribute quiz performance to leaderboard rankings.",
-      "reqIds": [
-        "REQ-19"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-certificate-generator-that-creates-downloadable-pdf-certificates-for-users-upon-completing-milestones-e-g-finishing-all-chapters-in-a-subject-maintaining-active-subscription-for-a-semester-include-user-name-achievement-type-and-date-on-certificates",
-      "title": "Implement certificate generator that creates downloadable PDF certificates for users upon completing milestones (e.g., finishing all chapters in a subject, maintaining active subscription for a semester). Include user name, achievement type, and date on certificates.",
-      "reqIds": [
-        "REQ-20"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-apply-a-professional-modern-and-trustworthy-visual-design-theme-suitable-for-an-educational-platform-use-a-cohesive-color-palette-that-conveys-knowledge-and-accessibility-avoid-blue-and-purple-implement-clean-typography-consistent-spacing-and-a-layout-that-prioritizes-content-discoverability-and-readability-across-all-pages",
-      "title": "Apply a professional, modern, and trustworthy visual design theme suitable for an educational platform. Use a cohesive color palette that conveys knowledge and accessibility (avoid blue and purple). Implement clean typography, consistent spacing, and a layout that prioritizes content discoverability and readability across all pages.",
-      "reqIds": [
-        "REQ-21"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-phone-number-input-field-to-the-admin-withdrawal-form-interface-where-administrators-can-enter-their-phone-number-to-receive-withdrawal-amounts",
-      "title": "Add a phone number input field to the admin withdrawal form/interface where administrators can enter their phone number to receive withdrawal amounts",
-      "reqIds": [
-        "REQ-22"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-an-admin-login-form-on-the-frontend-that-accepts-email-and-password-inputs-allowing-mouli10298-gmail-com-to-authenticate-with-password-credentials",
-      "title": "Add an admin login form on the frontend that accepts email and password inputs, allowing mouli10298@gmail.com to authenticate with password credentials.",
-      "reqIds": [
-        "REQ-26"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-display-the-phonepe-qr-code-image-from-the-uploaded-screenshot-on-the-subscription-payment-page-so-users-can-scan-it-to-pay-the-subscription-amount-directly-to-phone-number-9392412728",
-      "title": "Display the PhonePe QR code image (from the uploaded screenshot) on the subscription payment page so users can scan it to pay the subscription amount directly to phone number 9392412728",
-      "reqIds": [
-        "REQ-27"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-payment-instructions-on-the-subscription-page-explaining-that-users-should-scan-the-qr-code-using-phonepe-google-pay-paytm-apps-to-complete-the-5-weekly-subscription-payment-to-phone-number-9392412728",
-      "title": "Add payment instructions on the subscription page explaining that users should scan the QR code using PhonePe/Google Pay/Paytm apps to complete the ₹5 weekly subscription payment to phone number 9392412728",
-      "reqIds": [
-        "REQ-29"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-payment-confirmation-workflow-to-mention-that-payments-were-sent-to-phone-number-9392412728-after-users-complete-the-qr-code-scan-payment",
-      "title": "Update payment confirmation workflow to mention that payments were sent to phone number 9392412728 after users complete the QR code scan payment",
-      "reqIds": [
-        "REQ-30"
+        "REQ-2"
       ],
       "version": 1
     }
@@ -182,165 +20,26 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "User registration and authentication system with Gmail and Roll Number login",
+      "summary": "Add PhonePe payment with UPI ID 9392412728-2@axl for subscription option",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Branch-wise content organization (CSE, ECE, EEE, MECH, Civil) with semester and chapter structure",
+      "summary": "Hide/obscure UPI ID in the UI",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "₹5 weekly subscription system with auto-expiry after 7 days and remaining days display",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "UPI payment integration (Razorpay/PhonePe/Google Pay) with payment confirmation and transaction storage",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Admin wallet dashboard with earnings display, balance tracking, and withdrawal system (₹50 minimum)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Admin panel for content upload (PDFs, notes, videos, links), user management, payment approval, and banner management",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "User dashboard with subscription status, payment history, and download history",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "File upload system for PDFs, notes, images with secure storage and access control",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-9",
-      "summary": "Security features: JWT authentication, password hashing (bcrypt), payment verification, SQL injection protection",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-10",
-      "summary": "Extra features: Search, dark mode, download counter, user profile, notifications, leaderboard, feedback, study reminders, daily quiz, certificate generator",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-12",
-      "summary": "Create backend data models for six diploma branches: Computer Science Engineering (CSE), Electronics & Communication Engineering (ECE), Electrical & Electronics Engineering (EEE), Mechanical Engineering (MECH), Civil Engineering, and Other Diploma Branches. Each branch must support multiple semesters, with each semester containing subjects organized into chapters.",
+      "summary": "Update the PhonePe payment UPI ID from the current value to '9392412728-2@axl' in the backend payment configuration",
       "reqIds": [
-        "REQ-2"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-13",
-      "summary": "Build a subscription management system with a ₹5 weekly plan. Track subscription status, payment date, expiry date (7 days from payment), and remaining days. Auto-expire subscriptions after 7 days and restrict content access to active subscribers only.",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-14",
-      "summary": "Integrate payment processing with support for UPI payment methods (Razorpay/PhonePe/Google Pay). Store payment records including payment date, amount paid (₹5), transaction ID, user Gmail, and Roll Number. Implement payment confirmation workflow.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-15",
-      "summary": "Create an admin wallet system tracking total earnings, available balance, and withdrawal history. Implement withdrawal functionality with a minimum threshold of ₹50. Store all withdrawal transactions with date, amount, and status.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-23",
-      "summary": "Track download counts for all PDF and note downloads per user and globally. Display download counter on content items and in user's download history.",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-27",
-      "summary": "Implement feedback and rating system allowing users to rate content (PDFs, notes, videos) on a 5-star scale and leave text comments. Display average ratings on content items and aggregate feedback in admin panel.",
-      "reqIds": [
-        "REQ-17"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-28",
-      "summary": "Add phone number field to admin withdrawal form for receiving withdrawal amounts",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-30",
-      "summary": "Store the phone number in the backend when admin submits a withdrawal request, associating it with the withdrawal transaction record",
-      "reqIds": [
-        "REQ-23"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-31",
-      "summary": "Store a secure admin password credential for the email mouli10298@gmail.com in the backend. Hash the password using appropriate cryptographic methods before storage.",
-      "reqIds": [
-        "REQ-24"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-32",
-      "summary": "Implement admin password authentication mechanism that allows mouli10298@gmail.com to authenticate using the stored password in addition to Internet Identity.",
-      "reqIds": [
-        "REQ-25"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-33",
-      "summary": "Configure UPI QR code payment integration to direct payments to phone number 9392412728 with scanner functionality",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-34",
-      "summary": "Implement SMS/messaging notification system to send payment confirmations to phone number 9392412728",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-36",
-      "summary": "Store the phone number 9392412728 as the default payment recipient number in the backend for all subscription payments",
-      "reqIds": [
-        "REQ-28"
+        "REQ-1"
       ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Diploma Smart Study Hub",
+  "projectName": "Update PhonePe UPI ID and hide it in UI",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

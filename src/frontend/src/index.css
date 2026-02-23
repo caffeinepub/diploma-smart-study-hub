@@ -3,104 +3,94 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.5rem;
-        
-        /* Warm educational color palette - Light mode */
-        --background: 0.98 0.01 85;
-        --foreground: 0.25 0.02 85;
-        
-        --card: 1 0 0;
-        --card-foreground: 0.25 0.02 85;
-        
-        --popover: 1 0 0;
-        --popover-foreground: 0.25 0.02 85;
-        
-        /* Sage green primary */
-        --primary: 0.52 0.08 145;
-        --primary-foreground: 0.98 0.01 145;
-        
-        /* Terracotta orange secondary */
-        --secondary: 0.65 0.12 35;
-        --secondary-foreground: 0.98 0.01 35;
-        
-        --muted: 0.95 0.01 85;
-        --muted-foreground: 0.55 0.02 85;
-        
-        /* Warm amber accent */
-        --accent: 0.78 0.10 65;
-        --accent-foreground: 0.25 0.02 65;
-        
-        --destructive: 0.55 0.20 25;
-        --destructive-foreground: 0.98 0.01 25;
-        
-        --border: 0.90 0.01 85;
-        --input: 0.90 0.01 85;
-        --ring: 0.52 0.08 145;
-        
-        --chart-1: 0.65 0.15 145;
-        --chart-2: 0.70 0.12 35;
-        --chart-3: 0.75 0.10 65;
-        --chart-4: 0.60 0.10 180;
-        --chart-5: 0.68 0.12 200;
-    }
+  :root {
+    /* Forest green with teal accents - unique and vibrant palette */
+    --background: oklch(98% 0.01 160);
+    --foreground: oklch(18% 0.02 160);
 
-    .dark {
-        /* Dark mode with warm tones */
-        --background: 0.20 0.02 85;
-        --foreground: 0.95 0.01 85;
-        
-        --card: 0.25 0.02 85;
-        --card-foreground: 0.95 0.01 85;
-        
-        --popover: 0.22 0.02 85;
-        --popover-foreground: 0.95 0.01 85;
-        
-        /* Lighter sage green for dark mode */
-        --primary: 0.65 0.10 145;
-        --primary-foreground: 0.20 0.02 145;
-        
-        /* Lighter terracotta for dark mode */
-        --secondary: 0.70 0.12 35;
-        --secondary-foreground: 0.20 0.02 35;
-        
-        --muted: 0.30 0.02 85;
-        --muted-foreground: 0.65 0.02 85;
-        
-        /* Lighter amber for dark mode */
-        --accent: 0.80 0.10 65;
-        --accent-foreground: 0.20 0.02 65;
-        
-        --destructive: 0.60 0.20 25;
-        --destructive-foreground: 0.95 0.01 25;
-        
-        --border: 0.35 0.02 85;
-        --input: 0.35 0.02 85;
-        --ring: 0.65 0.10 145;
-        
-        --chart-1: 0.70 0.15 145;
-        --chart-2: 0.75 0.12 35;
-        --chart-3: 0.80 0.10 65;
-        --chart-4: 0.65 0.10 180;
-        --chart-5: 0.72 0.12 200;
-    }
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(18% 0.02 160);
 
-    * {
-        @apply border-border;
-    }
-    
-    body {
-        @apply bg-background text-foreground;
-        font-feature-settings: "rlig" 1, "calt" 1;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        @apply font-bold;
-    }
+    --popover: oklch(100% 0 0);
+    --popover-foreground: oklch(18% 0.02 160);
+
+    /* Deep forest green primary */
+    --primary: oklch(48% 0.14 155);
+    --primary-foreground: oklch(98% 0.01 160);
+
+    /* Sage green secondary */
+    --secondary: oklch(72% 0.08 145);
+    --secondary-foreground: oklch(18% 0.02 160);
+
+    /* Vibrant teal accent */
+    --accent: oklch(62% 0.16 185);
+    --accent-foreground: oklch(98% 0.01 160);
+
+    --muted: oklch(95% 0.01 160);
+    --muted-foreground: oklch(48% 0.02 160);
+
+    --destructive: oklch(55% 0.20 15);
+    --destructive-foreground: oklch(98% 0.01 160);
+
+    --border: oklch(88% 0.02 160);
+    --input: oklch(88% 0.02 160);
+    --ring: oklch(48% 0.14 155);
+
+    --radius: 0.5rem;
+
+    --success: oklch(62% 0.16 145);
+    --success-foreground: oklch(98% 0.01 160);
+
+    --warning: oklch(72% 0.14 85);
+    --warning-foreground: oklch(18% 0.02 160);
+  }
+
+  .dark {
+    --background: oklch(15% 0.02 160);
+    --foreground: oklch(95% 0.01 160);
+
+    --card: oklch(18% 0.02 160);
+    --card-foreground: oklch(95% 0.01 160);
+
+    --popover: oklch(18% 0.02 160);
+    --popover-foreground: oklch(95% 0.01 160);
+
+    /* Brighter forest green for dark mode */
+    --primary: oklch(58% 0.16 155);
+    --primary-foreground: oklch(12% 0.02 160);
+
+    /* Brighter sage for dark mode */
+    --secondary: oklch(62% 0.10 145);
+    --secondary-foreground: oklch(95% 0.01 160);
+
+    /* Brighter teal for dark mode */
+    --accent: oklch(68% 0.18 185);
+    --accent-foreground: oklch(12% 0.02 160);
+
+    --muted: oklch(22% 0.02 160);
+    --muted-foreground: oklch(65% 0.02 160);
+
+    --destructive: oklch(60% 0.22 15);
+    --destructive-foreground: oklch(95% 0.01 160);
+
+    --border: oklch(28% 0.02 160);
+    --input: oklch(28% 0.02 160);
+    --ring: oklch(58% 0.16 155);
+
+    --success: oklch(65% 0.18 145);
+    --success-foreground: oklch(12% 0.02 160);
+
+    --warning: oklch(75% 0.16 85);
+    --warning-foreground: oklch(12% 0.02 160);
+  }
 }
 
-@layer utilities {
-    .text-balance {
-        text-wrap: balance;
-    }
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }

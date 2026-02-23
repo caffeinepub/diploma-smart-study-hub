@@ -24,13 +24,6 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const ShoppingItem = IDL.Record({
-  'productName' : IDL.Text,
-  'currency' : IDL.Text,
-  'quantity' : IDL.Nat,
-  'priceInCents' : IDL.Nat,
-  'productDescription' : IDL.Text,
-});
 export const FileType = IDL.Variant({
   'mp4' : IDL.Null,
   'pdf' : IDL.Null,
@@ -51,6 +44,14 @@ export const File = IDL.Record({
   'isEncrypted' : IDL.Bool,
   'fileLink' : IDL.Opt(IDL.Text),
   'fileType' : FileType,
+});
+export const UploadedFiles = IDL.Record({ 'files' : IDL.Vec(File) });
+export const ShoppingItem = IDL.Record({
+  'productName' : IDL.Text,
+  'currency' : IDL.Text,
+  'quantity' : IDL.Nat,
+  'priceInCents' : IDL.Nat,
+  'productDescription' : IDL.Text,
 });
 export const LessonReminder = IDL.Record({
   'interval' : IDL.Int,
@@ -78,6 +79,20 @@ export const Lesson = IDL.Record({
   'ratingsCount' : IDL.Nat,
   'teacherSchedule' : IDL.Vec(TeacherSchedule),
 });
+export const PaymentStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'completed' : IDL.Null,
+  'refunded' : IDL.Null,
+  'failed' : IDL.Null,
+});
+export const PaymentRecord = IDL.Record({
+  'id' : IDL.Text,
+  'status' : PaymentStatus,
+  'userId' : IDL.Principal,
+  'timestamp' : IDL.Int,
+  'stripeSessionId' : IDL.Opt(IDL.Text),
+  'amount' : IDL.Nat,
+});
 export const WithdrawalStatus = IDL.Variant({
   'pending' : IDL.Null,
   'completed' : IDL.Null,
@@ -98,6 +113,28 @@ export const UserProfile = IDL.Record({
   'email' : IDL.Text,
   'rollNumber' : IDL.Text,
   'profilePicture' : IDL.Opt(IDL.Text),
+});
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const GalleryVideo = IDL.Record({
+  'id' : IDL.Text,
+  'blob' : ExternalBlob,
+  'fileName' : IDL.Text,
+});
+export const GalleryImage = IDL.Record({
+  'id' : IDL.Text,
+  'blob' : IDL.Vec(IDL.Nat8),
+  'fileName' : IDL.Text,
+});
+export const Gallery = IDL.Record({
+  'id' : IDL.Text,
+  'title' : IDL.Text,
+  'branch' : IDL.Opt(IDL.Text),
+  'semester' : IDL.Opt(IDL.Text),
+  'subject' : IDL.Opt(IDL.Text),
+  'description' : IDL.Text,
+  'chapter' : IDL.Opt(IDL.Text),
+  'videos' : IDL.Vec(GalleryVideo),
+  'images' : IDL.Vec(GalleryImage),
 });
 export const LessonStatus = IDL.Variant({
   'notStarted' : IDL.Null,
@@ -167,28 +204,83 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'activateUserAccount' : IDL.Func([IDL.Principal], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'authenticateAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'bulkDeleteCategories' : IDL.Func([IDL.Vec(IDL.Text)], [], []),
+  'bulkUpload' : IDL.Func([UploadedFiles], [], []),
+  'checkForDuplicates' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], ['query']),
+  'checkSubscriptionStatus' : IDL.Func([], [IDL.Bool], ['query']),
   'createCheckoutSession' : IDL.Func(
       [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
       [IDL.Text],
       [],
     ),
+  'createGallery' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+      ],
+      [IDL.Text],
+      [],
+    ),
   'createLesson' : IDL.Func([Lesson], [IDL.Text], []),
+  'deactivateUserAccount' : IDL.Func([IDL.Principal], [], []),
+  'deleteCategory' : IDL.Func([IDL.Text], [], []),
+  'deleteFile' : IDL.Func([IDL.Text], [], []),
+  'deleteGallery' : IDL.Func([IDL.Text], [], []),
+  'deleteGalleryImage' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'deleteGalleryVideo' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'deleteImportantLink' : IDL.Func([IDL.Text], [], []),
   'deleteLesson' : IDL.Func([IDL.Text], [], []),
+  'deleteVideoLink' : IDL.Func([IDL.Text], [], []),
+  'finalizeStripeCheckout' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'getActiveSubscriptions' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+  'getAllActiveSubscriptions' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Principal)],
+      ['query'],
+    ),
   'getAllLessons' : IDL.Func([], [IDL.Vec(Lesson)], ['query']),
+  'getAllPayments' : IDL.Func([], [IDL.Vec(PaymentRecord)], ['query']),
   'getAllWithdrawalRequests' : IDL.Func(
       [],
       [IDL.Vec(WithdrawalRequest)],
       ['query'],
     ),
+  'getBankAccountDetails' : IDL.Func([], [IDL.Text, IDL.Text], ['query']),
+  'getCallerPayments' : IDL.Func([], [IDL.Vec(PaymentRecord)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getFinalizedPurchases' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+  'getGalleriesByCategory' : IDL.Func(
+      [
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+      ],
+      [IDL.Vec(Gallery)],
+      ['query'],
+    ),
+  'getGalleryById' : IDL.Func([IDL.Text], [IDL.Opt(Gallery)], ['query']),
+  'getGalleryVideos' : IDL.Func([IDL.Text], [IDL.Vec(GalleryVideo)], ['query']),
   'getLesson' : IDL.Func([IDL.Text], [Lesson], ['query']),
   'getLessonStatus' : IDL.Func([IDL.Text], [LessonStatus], ['query']),
   'getLessonTimeSpent' : IDL.Func([IDL.Text], [IDL.Int], ['query']),
-  'getPhoneNumber' : IDL.Func([], [IDL.Text], ['query']),
+  'getPaymentById' : IDL.Func([IDL.Text], [IDL.Opt(PaymentRecord)], ['query']),
+  'getPendingPurchases' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+  'getPhonePePaymentsUPI' : IDL.Func([], [IDL.Text], ['query']),
   'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+  'getUserPayments' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(PaymentRecord)],
+      ['query'],
+    ),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
@@ -202,6 +294,7 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isPasswordSet' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+  'isSubscriptionActive' : IDL.Func([], [IDL.Bool], ['query']),
   'saveAdminPassword' : IDL.Func([IDL.Text], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
@@ -213,7 +306,11 @@ export const idlService = IDL.Service({
     ),
   'updateLesson' : IDL.Func([IDL.Text, Lesson], [], []),
   'updateLessonStatus' : IDL.Func([LessonStatusUpdate], [], []),
+  'updatePaymentStatus' : IDL.Func([IDL.Text, PaymentStatus], [], []),
   'updateWithdrawalStatus' : IDL.Func([IDL.Text, WithdrawalStatus], [], []),
+  'uploadGalleryImages' : IDL.Func([IDL.Text, IDL.Vec(GalleryImage)], [], []),
+  'uploadGalleryVideos' : IDL.Func([IDL.Text, IDL.Vec(GalleryVideo)], [], []),
+  'validateFileSize' : IDL.Func([IDL.Nat], [IDL.Bool], ['query']),
 });
 
 export const idlInitArgs = [];
@@ -235,13 +332,6 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const ShoppingItem = IDL.Record({
-    'productName' : IDL.Text,
-    'currency' : IDL.Text,
-    'quantity' : IDL.Nat,
-    'priceInCents' : IDL.Nat,
-    'productDescription' : IDL.Text,
-  });
   const FileType = IDL.Variant({
     'mp4' : IDL.Null,
     'pdf' : IDL.Null,
@@ -262,6 +352,14 @@ export const idlFactory = ({ IDL }) => {
     'isEncrypted' : IDL.Bool,
     'fileLink' : IDL.Opt(IDL.Text),
     'fileType' : FileType,
+  });
+  const UploadedFiles = IDL.Record({ 'files' : IDL.Vec(File) });
+  const ShoppingItem = IDL.Record({
+    'productName' : IDL.Text,
+    'currency' : IDL.Text,
+    'quantity' : IDL.Nat,
+    'priceInCents' : IDL.Nat,
+    'productDescription' : IDL.Text,
   });
   const LessonReminder = IDL.Record({
     'interval' : IDL.Int,
@@ -287,6 +385,20 @@ export const idlFactory = ({ IDL }) => {
     'ratingsCount' : IDL.Nat,
     'teacherSchedule' : IDL.Vec(TeacherSchedule),
   });
+  const PaymentStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'completed' : IDL.Null,
+    'refunded' : IDL.Null,
+    'failed' : IDL.Null,
+  });
+  const PaymentRecord = IDL.Record({
+    'id' : IDL.Text,
+    'status' : PaymentStatus,
+    'userId' : IDL.Principal,
+    'timestamp' : IDL.Int,
+    'stripeSessionId' : IDL.Opt(IDL.Text),
+    'amount' : IDL.Nat,
+  });
   const WithdrawalStatus = IDL.Variant({
     'pending' : IDL.Null,
     'completed' : IDL.Null,
@@ -307,6 +419,28 @@ export const idlFactory = ({ IDL }) => {
     'email' : IDL.Text,
     'rollNumber' : IDL.Text,
     'profilePicture' : IDL.Opt(IDL.Text),
+  });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const GalleryVideo = IDL.Record({
+    'id' : IDL.Text,
+    'blob' : ExternalBlob,
+    'fileName' : IDL.Text,
+  });
+  const GalleryImage = IDL.Record({
+    'id' : IDL.Text,
+    'blob' : IDL.Vec(IDL.Nat8),
+    'fileName' : IDL.Text,
+  });
+  const Gallery = IDL.Record({
+    'id' : IDL.Text,
+    'title' : IDL.Text,
+    'branch' : IDL.Opt(IDL.Text),
+    'semester' : IDL.Opt(IDL.Text),
+    'subject' : IDL.Opt(IDL.Text),
+    'description' : IDL.Text,
+    'chapter' : IDL.Opt(IDL.Text),
+    'videos' : IDL.Vec(GalleryVideo),
+    'images' : IDL.Vec(GalleryImage),
   });
   const LessonStatus = IDL.Variant({
     'notStarted' : IDL.Null,
@@ -373,28 +507,99 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'activateUserAccount' : IDL.Func([IDL.Principal], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'authenticateAdmin' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'bulkDeleteCategories' : IDL.Func([IDL.Vec(IDL.Text)], [], []),
+    'bulkUpload' : IDL.Func([UploadedFiles], [], []),
+    'checkForDuplicates' : IDL.Func(
+        [IDL.Text, IDL.Text],
+        [IDL.Bool],
+        ['query'],
+      ),
+    'checkSubscriptionStatus' : IDL.Func([], [IDL.Bool], ['query']),
     'createCheckoutSession' : IDL.Func(
         [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
         [IDL.Text],
         [],
       ),
+    'createGallery' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+        ],
+        [IDL.Text],
+        [],
+      ),
     'createLesson' : IDL.Func([Lesson], [IDL.Text], []),
+    'deactivateUserAccount' : IDL.Func([IDL.Principal], [], []),
+    'deleteCategory' : IDL.Func([IDL.Text], [], []),
+    'deleteFile' : IDL.Func([IDL.Text], [], []),
+    'deleteGallery' : IDL.Func([IDL.Text], [], []),
+    'deleteGalleryImage' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'deleteGalleryVideo' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'deleteImportantLink' : IDL.Func([IDL.Text], [], []),
     'deleteLesson' : IDL.Func([IDL.Text], [], []),
+    'deleteVideoLink' : IDL.Func([IDL.Text], [], []),
+    'finalizeStripeCheckout' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'getActiveSubscriptions' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Principal)],
+        ['query'],
+      ),
+    'getAllActiveSubscriptions' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Principal)],
+        ['query'],
+      ),
     'getAllLessons' : IDL.Func([], [IDL.Vec(Lesson)], ['query']),
+    'getAllPayments' : IDL.Func([], [IDL.Vec(PaymentRecord)], ['query']),
     'getAllWithdrawalRequests' : IDL.Func(
         [],
         [IDL.Vec(WithdrawalRequest)],
         ['query'],
       ),
+    'getBankAccountDetails' : IDL.Func([], [IDL.Text, IDL.Text], ['query']),
+    'getCallerPayments' : IDL.Func([], [IDL.Vec(PaymentRecord)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getFinalizedPurchases' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+    'getGalleriesByCategory' : IDL.Func(
+        [
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+        ],
+        [IDL.Vec(Gallery)],
+        ['query'],
+      ),
+    'getGalleryById' : IDL.Func([IDL.Text], [IDL.Opt(Gallery)], ['query']),
+    'getGalleryVideos' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(GalleryVideo)],
+        ['query'],
+      ),
     'getLesson' : IDL.Func([IDL.Text], [Lesson], ['query']),
     'getLessonStatus' : IDL.Func([IDL.Text], [LessonStatus], ['query']),
     'getLessonTimeSpent' : IDL.Func([IDL.Text], [IDL.Int], ['query']),
-    'getPhoneNumber' : IDL.Func([], [IDL.Text], ['query']),
+    'getPaymentById' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(PaymentRecord)],
+        ['query'],
+      ),
+    'getPendingPurchases' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+    'getPhonePePaymentsUPI' : IDL.Func([], [IDL.Text], ['query']),
     'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+    'getUserPayments' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(PaymentRecord)],
+        ['query'],
+      ),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
@@ -408,6 +613,7 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isPasswordSet' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+    'isSubscriptionActive' : IDL.Func([], [IDL.Bool], ['query']),
     'saveAdminPassword' : IDL.Func([IDL.Text], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
@@ -423,7 +629,11 @@ export const idlFactory = ({ IDL }) => {
       ),
     'updateLesson' : IDL.Func([IDL.Text, Lesson], [], []),
     'updateLessonStatus' : IDL.Func([LessonStatusUpdate], [], []),
+    'updatePaymentStatus' : IDL.Func([IDL.Text, PaymentStatus], [], []),
     'updateWithdrawalStatus' : IDL.Func([IDL.Text, WithdrawalStatus], [], []),
+    'uploadGalleryImages' : IDL.Func([IDL.Text, IDL.Vec(GalleryImage)], [], []),
+    'uploadGalleryVideos' : IDL.Func([IDL.Text, IDL.Vec(GalleryVideo)], [], []),
+    'validateFileSize' : IDL.Func([IDL.Nat], [IDL.Bool], ['query']),
   });
 };
 

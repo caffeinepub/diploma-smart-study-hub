@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from '@tanstack/react-router';
 import { useInternetIdentity } from '../../hooks/useInternetIdentity';
+import { useIsAdmin } from '../../hooks/useAdminCheck';
 import { useSubmitWithdrawalRequest, useGetAllWithdrawalRequests } from '../../hooks/useWithdrawal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../../components/ui/dialog';
-import { Users, FileText, DollarSign, TrendingUp, Upload, Phone } from 'lucide-react';
+import { Alert, AlertDescription } from '../../components/ui/alert';
+import { Users, FileText, DollarSign, TrendingUp, Upload, Phone, Shield, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminDashboardPage() {
   const { identity } = useInternetIdentity();
+  const { isAdmin, isLoading: adminLoading } = useIsAdmin();
   const navigate = useNavigate();
   const [showWithdrawalDialog, setShowWithdrawalDialog] = useState(false);
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
@@ -28,7 +31,29 @@ export default function AdminDashboardPage() {
     }
   }, [identity, navigate]);
 
-  if (!identity) return null;
+  useEffect(() => {
+    if (!adminLoading && identity && !isAdmin) {
+      toast.error('Access Denied', {
+        description: 'You do not have admin permissions to access this page.',
+      });
+      navigate({ to: '/dashboard' });
+    }
+  }, [isAdmin, adminLoading, identity, navigate]);
+
+  if (!identity || adminLoading) return null;
+
+  if (!isAdmin) {
+    return (
+      <div className="container py-12">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Access Denied: You do not have admin permissions to view this page.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   const handleWithdrawalSubmit = async () => {
     const amount = parseFloat(withdrawalAmount);
@@ -70,6 +95,19 @@ export default function AdminDashboardPage() {
   return (
     <div className="container py-8">
       <div className="space-y-8">
+        {/* Admin Mode Banner */}
+        <div className="rounded-lg bg-accent/10 border-2 border-accent p-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+              <Shield className="h-5 w-5 text-accent-foreground" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-accent-foreground">Admin Mode Active</h2>
+              <p className="text-sm text-muted-foreground">You have full administrative access to the platform</p>
+            </div>
+          </div>
+        </div>
+
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
           <p className="text-muted-foreground">Manage your platform and monitor performance</p>
