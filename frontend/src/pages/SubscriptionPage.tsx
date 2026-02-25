@@ -3,14 +3,15 @@ import { useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useSubscription } from '../hooks/useSubscription';
 import { useCreateCheckoutSession } from '../hooks/usePaymentConfirmation';
-import { usePaymentConfirmation } from '../hooks/usePaymentConfirmation';
+import { useRazorpayPayment } from '../hooks/useRazorpayPayment';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import {
   CheckCircle, CreditCard, Zap, BookOpen, Video, FileText,
-  Shield, Star, ArrowRight, Loader2, XCircle
+  Shield, Star, ArrowRight, Loader2,
 } from 'lucide-react';
 import { ShoppingItem } from '../backend';
 
@@ -77,17 +78,18 @@ export default function SubscriptionPage() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
   const { data: isSubscribed } = useSubscription();
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [loadingStripePlan, setLoadingStripePlan] = useState<string | null>(null);
+  const [loadingRazorpayPlan, setLoadingRazorpayPlan] = useState<string | null>(null);
   const createCheckout = useCreateCheckoutSession();
-  const confirmPayment = usePaymentConfirmation();
+  const { initiatePayment } = useRazorpayPayment();
 
-  const handleSubscribe = async (plan: typeof PLANS[0]) => {
+  const handleStripeSubscribe = async (plan: typeof PLANS[0]) => {
     if (!identity) {
       navigate({ to: '/login' });
       return;
     }
 
-    setLoadingPlan(plan.id);
+    setLoadingStripePlan(plan.id);
     try {
       const item: ShoppingItem = {
         productName: plan.name,
@@ -113,9 +115,34 @@ export default function SubscriptionPage() {
         toast.error('Failed to initiate payment. Please try again.');
       }
     } finally {
-      setLoadingPlan(null);
+      setLoadingStripePlan(null);
     }
   };
+
+  const handleRazorpaySubscribe = async (plan: typeof PLANS[0]) => {
+    if (!identity) {
+      navigate({ to: '/login' });
+      return;
+    }
+
+    setLoadingRazorpayPlan(plan.id);
+    try {
+      await initiatePayment.mutateAsync({
+        planId: plan.id,
+        planName: plan.name,
+        amount: plan.priceInPaise,
+        description: `DiplomaHub ${plan.name} - ${plan.duration} access`,
+      });
+      toast.success('Subscription activated successfully!');
+      navigate({ to: '/dashboard' });
+    } catch (error: any) {
+      // Error toast is handled inside the hook's onError
+    } finally {
+      setLoadingRazorpayPlan(null);
+    }
+  };
+
+  const isAnyLoading = loadingStripePlan !== null || loadingRazorpayPlan !== null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -191,16 +218,42 @@ export default function SubscriptionPage() {
                     </li>
                   ))}
                 </ul>
+
+                {/* Razorpay Button */}
                 <Button
-                  onClick={() => handleSubscribe(plan)}
-                  disabled={loadingPlan !== null}
+                  onClick={() => handleRazorpaySubscribe(plan)}
+                  disabled={isAnyLoading}
+                  className="w-full font-semibold mb-2 bg-[oklch(0.42_0.18_25)] hover:bg-[oklch(0.48_0.18_25)] text-white"
+                >
+                  {loadingRazorpayPlan === plan.id ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Opening Razorpay...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14.5 2L6 14h6.5L10 22l10-12h-6.5L14.5 2z" />
+                      </svg>
+                      Pay {plan.priceDisplay} via Razorpay
+                    </span>
+                  )}
+                </Button>
+
+                <Separator className="my-2" />
+
+                {/* Stripe Button */}
+                <Button
+                  onClick={() => handleStripeSubscribe(plan)}
+                  disabled={isAnyLoading}
+                  variant="outline"
                   className={`w-full font-semibold ${
                     plan.popular
-                      ? 'bg-[oklch(0.75_0.18_74)] hover:bg-[oklch(0.80_0.18_76)] text-[oklch(0.15_0.03_240)]'
-                      : 'bg-primary hover:bg-primary/90 text-primary-foreground'
+                      ? 'border-[oklch(0.75_0.18_74)] text-[oklch(0.58_0.15_70)] hover:bg-[oklch(0.75_0.18_74)]/10'
+                      : 'border-primary/40 text-primary hover:bg-primary/5'
                   }`}
                 >
-                  {loadingPlan === plan.id ? (
+                  {loadingStripePlan === plan.id ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
                       Processing...
@@ -208,13 +261,36 @@ export default function SubscriptionPage() {
                   ) : (
                     <span className="flex items-center gap-2">
                       <Zap className="w-4 h-4" />
-                      Subscribe — {plan.priceDisplay}
+                      Pay via Stripe
                     </span>
                   )}
                 </Button>
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Payment Methods Info */}
+        <div className="max-w-3xl mx-auto mb-6">
+          <div className="p-4 rounded-xl bg-muted/30 border border-border">
+            <p className="text-xs text-center text-muted-foreground font-medium mb-2">Accepted Payment Methods</p>
+            <div className="flex items-center justify-center gap-6 flex-wrap">
+              <div className="flex items-center gap-1.5 text-xs text-foreground">
+                <div className="w-5 h-5 rounded bg-[oklch(0.42_0.18_25)] flex items-center justify-center">
+                  <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14.5 2L6 14h6.5L10 22l10-12h-6.5L14.5 2z" />
+                  </svg>
+                </div>
+                <span>Razorpay (UPI, Cards, Net Banking)</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-foreground">
+                <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center">
+                  <CreditCard className="w-3 h-3 text-white" />
+                </div>
+                <span>Stripe (International Cards)</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Features */}
@@ -242,7 +318,7 @@ export default function SubscriptionPage() {
           <div className="mt-4 p-3 rounded-xl bg-primary/5 border border-primary/20 flex items-center gap-2">
             <Shield className="w-4 h-4 text-primary flex-shrink-0" />
             <p className="text-xs text-muted-foreground">
-              Secure payment processing. Your subscription activates immediately after successful payment.
+              Secure payment processing via Razorpay & Stripe. Your subscription activates immediately after successful payment.
             </p>
           </div>
         </div>

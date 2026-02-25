@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { PaymentRecord, PaymentStatus } from '../../backend';
@@ -13,7 +12,7 @@ interface PaymentTransactionTableProps {
 }
 
 export default function PaymentTransactionTable({ payments, isLoading }: PaymentTransactionTableProps) {
-  const [filterMethod, setFilterMethod] = useState<'all' | 'phonepe' | 'stripe'>('all');
+  const [filterMethod, setFilterMethod] = useState<'all' | 'phonepe' | 'stripe' | 'razorpay'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | PaymentStatus>('all');
 
   const formatDate = (timestamp: bigint): string => {
@@ -62,8 +61,12 @@ export default function PaymentTransactionTable({ payments, isLoading }: Payment
     }
   };
 
-  const getPaymentMethod = (payment: PaymentRecord): string => {
+  const getPaymentMethod = (payment: PaymentRecord): 'Stripe' | 'Razorpay' | 'PhonePe/QR' => {
     if (payment.stripeSessionId) {
+      // Distinguish Razorpay payments by checking if the session ID starts with 'rzp_'
+      if (payment.stripeSessionId.startsWith('rzp_') || payment.stripeSessionId.startsWith('pay_')) {
+        return 'Razorpay';
+      }
       return 'Stripe';
     }
     return 'PhonePe/QR';
@@ -72,9 +75,27 @@ export default function PaymentTransactionTable({ payments, isLoading }: Payment
   const getMethodBadge = (payment: PaymentRecord) => {
     const method = getPaymentMethod(payment);
     if (method === 'Stripe') {
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Stripe</Badge>;
+      return (
+        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800">
+          Stripe
+        </Badge>
+      );
     }
-    return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">PhonePe/QR</Badge>;
+    if (method === 'Razorpay') {
+      return (
+        <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800">
+          <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14.5 2L6 14h6.5L10 22l10-12h-6.5L14.5 2z" />
+          </svg>
+          Razorpay
+        </Badge>
+      );
+    }
+    return (
+      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800">
+        PhonePe/QR
+      </Badge>
+    );
   };
 
   const filteredPayments = payments.filter((payment) => {
@@ -82,7 +103,8 @@ export default function PaymentTransactionTable({ payments, isLoading }: Payment
     const methodMatch =
       filterMethod === 'all' ||
       (filterMethod === 'phonepe' && method === 'PhonePe/QR') ||
-      (filterMethod === 'stripe' && method === 'Stripe');
+      (filterMethod === 'stripe' && method === 'Stripe') ||
+      (filterMethod === 'razorpay' && method === 'Razorpay');
 
     const statusMatch = filterStatus === 'all' || payment.status === filterStatus;
 
@@ -124,6 +146,7 @@ export default function PaymentTransactionTable({ payments, isLoading }: Payment
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="phonepe">PhonePe/QR</TabsTrigger>
               <TabsTrigger value="stripe">Stripe</TabsTrigger>
+              <TabsTrigger value="razorpay">Razorpay</TabsTrigger>
             </TabsList>
           </Tabs>
 

@@ -1,71 +1,67 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-24T14:47:01.657Z",
+  "generatedAt": "2026-02-25T04:06:21.184Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 4,
-    "implemented": 4,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove the admin panel button from the student Dashboard page (DashboardPage.tsx) so it is no longer visible or accessible to any user.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
+        "summary": "Add Razorpay as a payment method in the backend. Store the Razorpay live key (rzp_live_SKEU5q1dCtfMpg) in the backend actor configuration. Add a new backend function `createRazorpayOrder` that accepts a subscription plan type and amount, creates a Razorpay order via HTTP outcall to the Razorpay Orders API (https://api.razorpay.com/v1/orders), and returns the order ID and amount. Add a `verifyRazorpayPayment` function that accepts razorpay_order_id, razorpay_payment_id, and razorpay_signature, verifies the payment signature, records the payment transaction, and activates the user's subscription.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Remove the admin dropdown menu from the Header component (Header.tsx) so admin navigation links are not shown in the top navigation bar.",
+        "summary": "Add frontend hooks for Razorpay payment flow. Create a `useRazorpayPayment` hook that calls `createRazorpayOrder` on the backend, loads the Razorpay checkout script (https://checkout.razorpay.com/v1/checkout.js) dynamically, opens the Razorpay payment modal with the order details, and on success calls `verifyRazorpayPayment` to confirm and activate the subscription. Handle payment failure and modal dismissal with appropriate error states.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/layout/Header.tsx"
+          "frontend/src/hooks/useRazorpayPayment.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/layout/Header.tsx"
+          "frontend/src/hooks/useRazorpayPayment.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Remove the admin routes (/admin, /admin/dashboard, /admin/content, /admin/users, and any other /admin/* routes) from the TanStack Router configuration in App.tsx so admin pages are not reachable via URL.",
+        "summary": "Update the SubscriptionPage (frontend/src/pages/SubscriptionPage.tsx) to include a Razorpay payment option alongside the existing Stripe option. Each plan card (weekly, monthly, half-yearly) should show a 'Pay with Razorpay' button that triggers the Razorpay checkout flow using the useRazorpayPayment hook. Display the amount in INR. After successful payment, redirect the user to the dashboard with a success toast.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/pages/SubscriptionPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/pages/SubscriptionPage.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Remove the admin panel link/button from the Login page (LoginPage.tsx) so that after login, admin users are not redirected to the admin panel.",
+        "summary": "Update the PaymentTransactionTable (frontend/src/components/admin/PaymentTransactionTable.tsx) to display Razorpay as a payment method option in the filter dropdown and show a Razorpay badge/indicator for transactions made via Razorpay, consistent with the existing Stripe and PhonePe method indicators.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/components/admin/PaymentTransactionTable.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/components/admin/PaymentTransactionTable.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/components/layout/Header.tsx",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/LoginPage.tsx",
-    "frontend/src/pages/admin/AdminDashboardPage.tsx",
+    "frontend/src/components/admin/PaymentTransactionTable.tsx",
+    "frontend/src/hooks/useRazorpayPayment.ts",
+    "frontend/src/pages/SubscriptionPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,86 +1,94 @@
 {
   "kind": "build_request",
-  "title": "Remove Admin Panel from Website",
+  "title": "Add Razorpay Payment Integration for Subscriptions",
   "projectName": "Diploma Smart Study Hub",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove the admin panel button from the student Dashboard page (DashboardPage.tsx) so it is no longer visible or accessible to any user.",
-      "target": "frontend",
+      "text": "Add Razorpay as a payment method in the backend. Store the Razorpay live key (rzp_live_SKEU5q1dCtfMpg) in the backend actor configuration. Add a new backend function `createRazorpayOrder` that accepts a subscription plan type and amount, creates a Razorpay order via HTTP outcall to the Razorpay Orders API (https://api.razorpay.com/v1/orders), and returns the order ID and amount. Add a `verifyRazorpayPayment` function that accepts razorpay_order_id, razorpay_payment_id, and razorpay_signature, verifies the payment signature, records the payment transaction, and activates the user's subscription.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-9"
         ],
         "quotes": [
-          "To remove a admin plane into the my website"
+          "Add a payment option for subscriptions it is a my payment account to add a directly amount receive the money rzp_live_SKEU5q1dCtfMpg add the payment"
         ]
       },
       "acceptanceCriteria": [
-        "The 'Admin Panel' button/link is no longer rendered on the Dashboard page.",
-        "No visual reference to the admin panel exists on the Dashboard page."
+        "Backend stores Razorpay live key rzp_live_SKEU5q1dCtfMpg in configuration",
+        "createRazorpayOrder function accepts plan type and returns a valid Razorpay order ID",
+        "verifyRazorpayPayment function validates HMAC-SHA256 signature and activates subscription on success",
+        "Successful Razorpay payments are recorded in the payment transactions store alongside existing Stripe payments"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Remove the admin dropdown menu from the Header component (Header.tsx) so admin navigation links are not shown in the top navigation bar.",
+      "text": "Add frontend hooks for Razorpay payment flow. Create a `useRazorpayPayment` hook that calls `createRazorpayOrder` on the backend, loads the Razorpay checkout script (https://checkout.razorpay.com/v1/checkout.js) dynamically, opens the Razorpay payment modal with the order details, and on success calls `verifyRazorpayPayment` to confirm and activate the subscription. Handle payment failure and modal dismissal with appropriate error states.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-9"
         ],
         "quotes": [
-          "To remove a admin plane into the my website"
+          "Add a payment option for subscriptions"
         ]
       },
       "acceptanceCriteria": [
-        "The admin dropdown menu is no longer rendered in the Header.",
-        "No admin-related navigation links are visible in the top navigation bar for any user."
+        "useRazorpayPayment hook creates a Razorpay order via backend and opens the Razorpay checkout modal",
+        "On successful payment, verifyRazorpayPayment is called and subscription is activated",
+        "Payment failure shows an error toast with a retry option",
+        "Hook is reusable from the SubscriptionPage"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Remove the admin routes (/admin, /admin/dashboard, /admin/content, /admin/users, and any other /admin/* routes) from the TanStack Router configuration in App.tsx so admin pages are not reachable via URL.",
+      "text": "Update the SubscriptionPage (frontend/src/pages/SubscriptionPage.tsx) to include a Razorpay payment option alongside the existing Stripe option. Each plan card (weekly, monthly, half-yearly) should show a 'Pay with Razorpay' button that triggers the Razorpay checkout flow using the useRazorpayPayment hook. Display the amount in INR. After successful payment, redirect the user to the dashboard with a success toast.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-9"
         ],
         "quotes": [
-          "To remove a admin plane into the my website"
+          "Add a payment option for subscriptions",
+          "directly amount receive the money"
         ]
       },
       "acceptanceCriteria": [
-        "Navigating to any /admin/* URL results in a redirect or 404, not an admin page.",
-        "No admin routes are registered in the router configuration."
+        "Each subscription plan card on SubscriptionPage shows a 'Pay with Razorpay' button",
+        "Clicking the button opens the Razorpay checkout modal with the correct plan amount in INR",
+        "After payment success the user is redirected to the dashboard with a subscription active toast",
+        "The existing Stripe checkout button remains functional and unmodified",
+        "Loading state is shown on the button while the Razorpay order is being created"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Remove the admin panel link/button from the Login page (LoginPage.tsx) so that after login, admin users are not redirected to the admin panel.",
+      "text": "Update the PaymentTransactionTable (frontend/src/components/admin/PaymentTransactionTable.tsx) to display Razorpay as a payment method option in the filter dropdown and show a Razorpay badge/indicator for transactions made via Razorpay, consistent with the existing Stripe and PhonePe method indicators.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "To remove a admin plane into the my website"
+          "msg-9"
         ]
       },
       "acceptanceCriteria": [
-        "After login, all users (including admins) are redirected to the standard dashboard.",
-        "No admin-specific redirect logic exists on the Login page."
+        "PaymentTransactionTable filter dropdown includes 'Razorpay' as a filterable method",
+        "Razorpay transactions are displayed with a distinct Razorpay badge consistent with existing method badges"
       ]
     }
   ],
   "constraints": [
-    "Do not modify backend admin logic or remove admin-related backend methods — only remove frontend admin UI and routing.",
-    "Do not edit files listed in frontend.immutablePaths."
+    "Use the exact Razorpay live key provided: rzp_live_SKEU5q1dCtfMpg",
+    "Do not remove or modify the existing Stripe payment integration",
+    "Do not modify files listed in frontend.immutablePaths",
+    "All backend logic must remain in the single main actor (backend/main.mo)"
   ],
   "nonGoals": [
-    "Removing admin functionality from the backend (Motoko actor).",
-    "Changing subscription plans or payment flow.",
-    "Adding any new features or pages."
+    "Replacing or removing the existing Stripe checkout flow",
+    "Adding PhonePe changes beyond what already exists",
+    "Building a Razorpay webhook receiver (verification done inline via signature check)",
+    "Adding a Razorpay refund flow"
   ],
   "imageRequirements": {
     "required": [],
