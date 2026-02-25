@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Website project with subscription plans and payment flow. User wants to remove the admin panel from the website.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-remove-the-admin-panel-button-from-the-student-dashboard-page-dashboardpage-tsx-so-it-is-no-longer-visible-or-accessible-to-any-user",
+      "title": "Remove the admin panel button from the student Dashboard page (DashboardPage.tsx) so it is no longer visible or accessible to any user.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-admin-dropdown-menu-from-the-header-component-header-tsx-so-admin-navigation-links-are-not-shown-in-the-top-navigation-bar",
+      "title": "Remove the admin dropdown menu from the Header component (Header.tsx) so admin navigation links are not shown in the top navigation bar.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-admin-routes-admin-admin-dashboard-admin-content-admin-users-and-any-other-admin-routes-from-the-tanstack-router-configuration-in-app-tsx-so-admin-pages-are-not-reachable-via-url",
+      "title": "Remove the admin routes (/admin, /admin/dashboard, /admin/content, /admin/users, and any other /admin/* routes) from the TanStack Router configuration in App.tsx so admin pages are not reachable via URL.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-admin-panel-link-button-from-the-login-page-loginpage-tsx-so-that-after-login-admin-users-are-not-redirected-to-the-admin-panel",
+      "title": "Remove the admin panel link/button from the Login page (LoginPage.tsx) so that after login, admin users are not redirected to the admin panel.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Remove admin panel from the website",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Diploma Smart Study Hub",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

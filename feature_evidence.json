@@ -1,0 +1,93 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-remove-the-admin-panel-button-from-the-student-dashboard-page-dashboardpage-tsx-so-it-is-no-longer-visible-or-accessible-to-any-user",
+      "featureTitle": "Remove the admin panel button from the student Dashboard page (DashboardPage.tsx) so it is no longer visible or accessible to any user.",
+      "files": [
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-the-admin-dropdown-menu-from-the-header-component-header-tsx-so-admin-navigation-links-are-not-shown-in-the-top-navigation-bar",
+      "featureTitle": "Remove the admin dropdown menu from the Header component (Header.tsx) so admin navigation links are not shown in the top navigation bar.",
+      "files": [
+        "frontend/src/components/layout/Header.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-the-admin-routes-admin-admin-dashboard-admin-content-admin-users-and-any-other-admin-routes-from-the-tanstack-router-configuration-in-app-tsx-so-admin-pages-are-not-reachable-via-url",
+      "featureTitle": "Remove the admin routes (/admin, /admin/dashboard, /admin/content, /admin/users, and any other /admin/* routes) from the TanStack Router configuration in App.tsx so admin pages are not reachable via URL.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-the-admin-panel-link-button-from-the-login-page-loginpage-tsx-so-that-after-login-admin-users-are-not-redirected-to-the-admin-panel",
+      "featureTitle": "Remove the admin panel link/button from the Login page (LoginPage.tsx) so that after login, admin users are not redirected to the admin panel.",
+      "files": [
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

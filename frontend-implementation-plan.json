@@ -1,0 +1,67 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Remove Admin Panel from Website",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Remove the admin panel button from the student Dashboard page so it is no longer visible or accessible to any user",
+      "acceptanceCriteria": [
+        "The 'Admin Panel' button/link is no longer rendered on the Dashboard page.",
+        "No visual reference to the admin panel exists on the Dashboard page."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Remove the admin panel button and associated conditional rendering logic that displays it for admin users. Remove any imports or state related to admin panel navigation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Remove the admin dropdown menu from the Header component so admin navigation links are not shown in the top navigation bar",
+      "acceptanceCriteria": [
+        "The admin dropdown menu is no longer rendered in the Header.",
+        "No admin-related navigation links are visible in the top navigation bar for any user."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/layout/Header.tsx",
+          "operation": "modify",
+          "description": "Remove the admin dropdown menu component and all associated navigation links to admin routes. Remove any conditional rendering logic for admin users and related imports."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Remove the admin routes from the TanStack Router configuration so admin pages are not reachable via URL",
+      "acceptanceCriteria": [
+        "Navigating to any /admin/* URL results in a redirect or 404, not an admin page.",
+        "No admin routes are registered in the router configuration."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Remove all admin route registrations including /admin, /admin/dashboard, /admin/content, /admin/users, and any other /admin/* routes from the TanStack Router configuration. Remove admin page imports that are no longer needed."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Remove the admin panel link/button from the Login page so that after login, admin users are not redirected to the admin panel",
+      "acceptanceCriteria": [
+        "After login, all users (including admins) are redirected to the standard dashboard.",
+        "No admin-specific redirect logic exists on the Login page."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Remove admin-specific redirect logic that sends admin users to the admin panel after login. Ensure all users are redirected to the standard dashboard route regardless of role."
+        }
+      ]
+    }
+  ]
+}
